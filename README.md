@@ -1,16 +1,19 @@
 # crt2021-r-viz-assignment
 
-Data visualisation assignment
-Catherine Hurley
+#Data visualisation assignment
+*lectured by* >Catherine Hurley
 
-8/27/2021
+* on * > 8/27/2021
 
-The dataset marathon.csv gives results from the 2018 Dublin city marathon scraped from https://www.tdleventservices.co.uk/event-results/events?event=3073. General marathon information is here http://kbcdublinmarathon.ie
+**The dataset marathon.csv gives results from the 2018 Dublin city marathon scraped from https://www.tdleventservices.co.uk/event-results/events?event=3073. General marathon information is here http://kbcdublinmarathon.ie
+**
 
 Read in the data with
 
+'''
 library(tidyverse)
 m <- read_csv("marathon.csv")
+'''
 You should write a report with three parts:
 
 State some questions appropriate for the data.
