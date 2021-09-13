@@ -16,15 +16,17 @@ library(tidyverse)
 m <- read_csv("marathon.csv")
 ```
 
-You should write a report with three parts:
+# ASSIGNMENT :
 
-State some questions appropriate for the data.
+**You should write a report with three parts:**
 
-Write a paragraph detailing the subset of the data relevant to your questions, an overview of its structure, and whether any adjustments to the data are required.
+1. State some questions appropriate for the data.
 
-For each of the questions you posed, build visualisations that provide an answer. Write a paragraph describing the information gleaned from the visualisation and how it answers your question.
+2. Write a paragraph detailing the subset of the data relevant to your questions, an overview of its structure, and whether any adjustments to the data are required.
 
-Your written report including graphs and tables should be a maximum of three pages in length. You should supply in a separate file the code necessary to produce the graphs.
+3. For each of the questions you posed, build visualisations that provide an answer. Write a paragraph describing the information gleaned from the visualisation and how it answers your question.
 
-Rmarkdown may be useful to write your report. In Rstudio, do File>New File> R markdown to get started. You could look at the .Rmd files for my lectures on github also.
+***Your written report including graphs and tables should be a maximum of three pages in length. You should supply in a separate file the code necessary to produce the graphs.***
+
+***Rmarkdown may be useful to write your report. In Rstudio, do File>New File> R markdown to get started. You could look at the .Rmd files for my lectures on github also.***
 
