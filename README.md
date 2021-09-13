@@ -11,10 +11,10 @@
 
 Read in the data with
 
-'''
+```
 library(tidyverse)
 m <- read_csv("marathon.csv")
-'''
+```
 
 You should write a report with three parts:
 
