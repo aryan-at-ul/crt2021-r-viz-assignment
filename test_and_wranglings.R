@@ -5,7 +5,7 @@ library(ggplot2)
 library(hms)
 library(chron)
 #library(data.table)
-library(dplyr)
+#library(dplyr)
 
 # check for versions (handy when working on diff versions of R)
 sessionInfo()
@@ -75,6 +75,9 @@ df$Category = as.factor(df$Category)
 df$Gender = as.factor(df$Gender)
 df %>% drop_na()
 df$Chip.Time =  as_hms(df$Chip.Time)#chron(times=df$Chip.Time)#as.ITime(df$Chip.Time)
+df$Chip.Time <- as.character(strptime(df$Chip.Time, "%H:%M:%S"), "%H:%M:%S")
+df %>% drop_na()
+df$Chip.Time = hms(df$Chip.Time)#strftime(df$Chip.Time, format="%H:%M:%S")
 
 levels(df$Category)
 
@@ -119,21 +122,12 @@ ggplot(df, aes(x=Chip.Time ,color = Gender)) +
                  colour="black", fill="white") +
   geom_density(alpha=.2, fill="#FF6666")
 
-ggsave(filename = './figure/01_chiptime_density_histogram.png',plot = last_plot(),
-       units = "cm", width = 29.7, height = 21, dpi = 600)
-
-ggplot(df, aes(x=Chip.Time, fill=Gender)) + geom_density(alpha=.3) + ggtitle("Density distibution of finish time , gender wise")
 ggsave(filename = './figure/01_chiptime_density_plot.png',plot = last_plot(),
        units = "cm", width = 29.7, height = 21, dpi = 600)
 
-#sperating men rows and female rows 
-df_m <- filter(df,starts_with("M"))
-df_f <-
-
-
-
-
-
+ggplot(df, aes(x=Chip.Time, fill=Gender)) + geom_density(alpha=.3)
+ggsave(filename = './figure/01_chiptime_density_plot.png',plot = last_plot(),
+       units = "cm", width = 29.7, height = 21, dpi = 600)
 
 
 

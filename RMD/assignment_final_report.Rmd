@@ -1,0 +1,112 @@
+---
+title: "assignment_crt2021_dublin_marathon_viz"
+author: "aryan singh"
+date: "9/28/2021"
+output: html_document
+---
+
+# Introduction 
+
+This is a submission for assignment **Visualization in R using ggplot2**  [Link to assignment](http://htmlpreview.github.io/?https://github.com/cbhurley/CRT2021vis/blob/master/assignment.html)
+
+The content covers:
+
+* Marathon data set
+* Questions that can be answered using the data set
+* Conclusion
+
+# The Marathon data set
+```{r data,echo = FALSE, include=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(hms)
+library(data.table)
+library(ggcorrplot)
+library(dplyr)
+library(GGally)
+library(DT)
+df <- read_csv("/Users/aryansingh/aryan_dev_dir/crt2021-r-viz-assignment/data/marathon.csv")
+```
+
+```{r,echo = TRUE, include=TRUE}
+
+rows <- nrow(df)
+cols <- ncol(df)
+
+#datatable(df)
+
+```
+
+Data frame has `r cols` variables/columns and `r rows` measurement/rows in marathon data set
+
+
+# Some questions appropriate for the data: 
+
+* Count of participants age wise , which age group participates actively in marathons?
+* How the distribution looks like for finishers , gender wise ?
+* What was the percentage of exit/disqualification among participants age wise ?
+* How reliable is the gun time measurement in long races like marathon ?
+* What are different types of participants (runner/jogger/walker) ?
+* Is there a strong correlation between gender,category,time taken between 1st and 2nd stage , 2nd stage to halfway and halfway to finish ?
+* Among top 10 finishers , How was their rank over different stages of race ? 
+
+
+## figure below shows count of participants age wise : 
+
+*it can be said that most of the participants are from young and middle age and the pattern is similar between both the gender. *
+
+```{r age_wise_participants, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("/Users/aryansingh/aryan_dev_dir/crt2021-r-viz-assignment/figure/01_count_of_participats_age_wise.png")
+```
+
+
+
+
+## figure below shows the frequency of time at which participants has finished the race 
+
+*it can be seen from the below diagram that men have finished race a bit faster that women but the overall distribution of data remains the same which can imply that both the gender are competing optimally given that number of female participants is around 5607 while men participants is around 10826.*
+```{r frequency_participants, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("/Users/aryansingh/aryan_dev_dir/crt2021-r-viz-assignment/figure/08_freq_count_of_finish_time_gender_wise.png")
+```
+
+
+## figure below shows the percentage of disqalification / incompletion of race in various age groups and gender
+*it can be seen that women have a light more disqualification in old ages than men *
+```{r exit_group_wise, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("/Users/aryansingh/aryan_dev_dir/crt2021-r-viz-assignment/figure/02_age_group_wise_exit_from_race.png")
+```
+
+## figure below shows a comparision between chip time and gun time. 
+*it can be seen from the plot that gun time is not a reliable but more of a ceremonial way to measure finish time , as it deviates a-lot from actual chip time*
+
+```{r chiptimeguntime, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("/Users/aryansingh/aryan_dev_dir/crt2021-r-viz-assignment/figure/04_deviation_between_gun_time_chip_time.png")
+```
+
+
+## figure below shows type of participants , type can be runner, jogger and walker
+*based on race finish time , participants can be put into type runner is finish time was below 3hrs , jogger if finish time was between 3hrs and 5hrs and walkers if time was more than 5hrs *
+```{r participantstype, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("/Users/aryansingh/aryan_dev_dir/crt2021-r-viz-assignment/figure/03_type_of_participants_overall.png")
+```
+
+
+##figure below shows how stornger are variables like time between start to first 10 km , time between 10km to halfway and time bwteen halfway to end correlated with gender and Category
+*conclusions can be  drawn that, fast finishers of at early stages of races are more likely to have better overall position, which is obvious* 
+
+```{r correlationsv, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("/Users/aryansingh/aryan_dev_dir/crt2021-r-viz-assignment/figure/06_corelations_between_gender_stages_rank.png")
+```
+#figure below shows positons of top 10 finishers at different stages of marathon
+
+*it can be seen that David (2nd position) actually performed better through out the race except in the last stage , he has high chances of winning future marathon as his performace is more consistent *
+
+
+```{r top10finishers, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("/Users/aryansingh/aryan_dev_dir/crt2021-r-viz-assignment/figure/07_winners_ranking_at_differnt_stages.png")
+```
+
+[Link to code and files](https://github.com/aryan-at-ul/crt2021-r-viz-assignment)
+
+
+

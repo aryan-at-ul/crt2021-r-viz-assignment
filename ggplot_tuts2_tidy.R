@@ -3,12 +3,13 @@ library(tidyverse)
 library(ggplot2)
 library(lubridate)
 library(hms)
-library(lubridate)
-#library(data.table)
+library(data.table)
 library(ggcorrplot)
 library(dplyr)
 library(GGally)
 library(ggpcp)
+library(ggrepel)
+library(scales)
 # check for versions (handy when working on diff versions of R)
 sessionInfo()
 rm(list = ls())
@@ -83,6 +84,8 @@ ggsave(filename = './figure/01_chiptime_density_plot.png',plot = last_plot(),
        units = "cm", width = 29.7, height = 21, dpi = 600)
 
 
+df_m <- df[grep("M", df$Category),]#filter(df,Category == "Female")
+df_f <- df[grep("F", df$Category),]
 
 
 ggplot(df_f , aes(x = Category, y =  Chip.Time)) + 
@@ -255,7 +258,7 @@ ggplot(df, aes(Chip.Time)) +
   geom_line(aes(y=Gun.Time), colour="red") 
 
 
-ggsave(filename = './figure/04_deviation_debtween_gun_time_chip_time.png',plot = last_plot(),
+ggsave(filename = './figure/04_deviation_between_gun_time_chip_time.png',plot = last_plot(),
        units = "cm", width = 29.7, height = 21, dpi = 600)
 
 
@@ -348,6 +351,8 @@ ggplot(w.plot, aes(x=Category, y=value,fill=Gender)) +
   geom_boxplot(outlier.colour="red", outlier.shape=8,
                outlier.size=4) 
 
+
+
 ggplot(w.plot, aes(x=Gender, y=value, fill=Gender)) + 
   geom_violin()
 
@@ -378,17 +383,158 @@ ggsave(filename = './figure/06_corelations_between_gender_stages_rank.png',plot 
 
 colnames(df)
 ggpairs(w.plot, mapping = aes(color = Gender),
-        columns=c("value","variable"),
+        columns=c("value","variable","Gender"),
         lower = list(continuous =  wrap("smooth", method="lm", se=F, alpha=.5)),
         diag = list(continuous = wrap("densityDiag", alpha=0.5 )))
 
 #ggsave(filename = './figure/07_stages_gender_density.png',plot = last_plot(),
 #       units = "cm", width = 29.7, height = 21, dpi = 600)
 
+df <- df %>%  
+  mutate(group = substring(Category,2))  
 
-#df7 <- select(df6,start_to_10K_time,X10K_time_to_halfway,halfway_to_end_time,gender,Category,Overall.Position)
+df_g <- df %>%  group_by(group,Gender) %>%  summarise(count=n())
 
-View(w.plot)
+ggplot(df_g,aes(x = group,y = count , color = Gender)) + 
+  geom_point(size = 5, alpha = 0.3 , position = "jitter") + 
+  coord_cartesian() + 
+  xlab("age wise groups") + 
+  ylab("count of participants") +
+  ggtitle("count of participants age wise") +
+  theme(axis.text = element_text(size = 10),
+        axis.title = element_text(size = 10),
+        axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 20, r = 0, b = 0, l = 0)),
+        plot.title = element_text(size = 20, face = "bold", hjust = 0.5,
+                                  margin = margin(t = 0, r = 0, b = 20, l = 0)))
+ggsave(filename = './figure/01_count_of_participats_age_wise.png',plot = last_plot(),
+       units = "cm", width = 29.7, height = 21, dpi = 600)
+
+
+
+df_diff <- df %>%  
+  tidyr::separate(col = Chip.Time, into = c('hours','min','sec'), sep = ":") %>% 
+  mutate(hours = as.numeric(hours),
+         min = as.numeric(min),
+         sec = as.numeric(sec)) %>% 
+  arrange(hours,min,sec)
+
+
+df_diff %>%  group_by(hours) %>% 
+  summarize(`total_racers` = n()) %>% 
+  arrange() %>% 
+  slice(1:10) %>% 
+  ggplot(aes(x = hours, y = total_racers)) + 
+  geom_line(size = 1.2 , color = "gray") + 
+  geom_point(size = 5, color = "brown")
+
+
+
+diff_top_10 <- df %>%  slice(1:10)
+
+ggplot() +
+  
+  geom_line(data = diff_top_10,aes( x = Chip.Time, y = Overall.Position),size = 1.2,color = "gray") + 
+  geom_text(data = diff_top_10,aes( x = Chip.Time, y = Overall.Position,label = First.Name),size = 5,position = "jitter",show.legend = F) + 
+  geom_line(data = diff_top_10, aes(x = X10K, y = `Stage.Position...11`) , color = "red") +
+  geom_text(data = diff_top_10,aes(x = X10K, y = `Stage.Position...11`,label =First.Name),size = 5,position = "jitter",show.legend = F) 
+
+
+ggplot() +
+  geom_point(data = diff_top_10,aes( x = First.Name, y = Overall.Position)) +
+  geom_point(data = diff_top_10,aes( x = First.Name, y = Stage.Position...11),color = "red") +
+  geom_point(data = diff_top_10,aes( x = First.Name, y = Stage.Position...13),color = "blue") 
+
+
+ggplot(data= diff_top_10, aes(x = First.Name, y =  Overall.Position,group = 1)) +
+  geom_point() +
+  geom_line() 
+
+
+
+labs <- c("1st"="#704546","2nd"="#3591d1","3rd"="#62c76b","final"="#ff66f0")
+
+ggplot(data = diff_top_10, aes(x = First.Name)) +
+  geom_point(aes(y = Stage.Position...11,group = 1),size = 3,color = "green",alpha = 0.5) +
+  geom_line(aes(y = Stage.Position...11,group = 1),color = "green") +
+  geom_point(aes(y = Stage.Position...13,group = 2),size = 3,color = "red",alpha = 0.5) +
+  geom_line(aes(y = Stage.Position...13,group = 2),color = "red") +
+  geom_point(aes(y = Stage.Position...15,group = 3),size = 3,color = "blue",alpha = 0.5) +
+  geom_line(aes(y = Stage.Position...15,group = 3),color = "blue") +
+  geom_point(aes(y = Overall.Position,group = 4),size = 3,color = "orange",alpha = 0.5) +
+  geom_line(aes(y = Overall.Position,group = 4),color = "orange") +
+  scale_y_continuous(breaks = seq(0,30,2)) +
+  #scale_color_manual(name = "stages",values = labs) + 
+  xlab("top 10 winners/finishers") +
+  ylab("rank of top 10 winner/finishers") +
+  ggtitle("rank at different stages of race") +
+  theme(axis.text = element_text(size = 10),
+        axis.title = element_text(size = 10),
+        axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 20, r = 0, b = 0, l = 0)),
+        plot.title = element_text(size = 10, face = "bold", hjust = 0.5,
+                                  margin = margin(t = 0, r = 0, b = 20, l = 0)))
+
+
+
+# below this 
+ggplot(data = diff_top_10, aes(x = First.Name)) +
+  geom_point(aes(y = Stage.Position...11,group = 1,color = "1st"),size = 3,alpha = 0.5,position = "identity") +
+  geom_line(aes(y = Stage.Position...11,group = 1,color = "1st")) +
+  geom_point(aes(y = Stage.Position...13,group = 2,color = "2nd"),size = 3,alpha = 0.5,position = "identity") +
+  geom_line(aes(y = Stage.Position...13,group = 2,color = "2nd")) +
+  geom_point(aes(y = Stage.Position...15,group = 3,color = "3rd"),size = 3,alpha = 0.5,position = "identity") +
+  geom_line(aes(y = Stage.Position...15,group = 3,color = "3rd")) +
+  geom_point(aes(y = Overall.Position,group = 4,color = "final"),size = 3,alpha = 0.5,position = "identity") +
+  geom_line(aes(y = Overall.Position,group = 4,color = "final")) +
+  scale_y_continuous(breaks = seq(0,30,2)) +
+  scale_color_manual(name = "stages",values = labs) + 
+  xlab("top 10 winners/finishers") +
+  ylab("rank of top 10 winners/finishers") +
+  ggtitle("rank at different stages of race") +
+  theme(axis.text = element_text(size = 10),
+        axis.title = element_text(size = 10),
+        axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 20, r = 0, b = 0, l = 0)),
+        plot.title = element_text(size = 10, face = "bold", hjust = 0.5,
+                                  margin = margin(t = 0, r = 0, b = 20, l = 0)))
+
+
+ggsave(filename = './figure/07_winners_ranking_at_differnt_stages.png',plot = last_plot(),
+       units = "cm", width = 29.7, height = 21, dpi = 600)
+
+
+
+df %>%  
+  ggplot(aes(x = Chip.Time,fill = Gender)) + 
+  geom_histogram(binwidth = 400,stackdir = "up")  + 
+  xlab("finish time (HH:MM:SS)") +
+  ylab("count") +
+  ggtitle("frequency count of finish time by gender") +
+  theme(axis.text = element_text(size = 10),
+        axis.title = element_text(size = 10),
+        axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 20, r = 0, b = 0, l = 0)),
+        plot.title = element_text(size = 10, face = "bold", hjust = 0.5,
+                                  margin = margin(t = 0, r = 0, b = 20, l = 0)))
+ggsave(filename = './figure/08_freq_count_of_finish_time_gender_wise.png',plot = last_plot(),
+       units = "cm", width = 29.7, height = 21, dpi = 600)
+
+
+df %>%  
+  ggplot(aes(x = Chip.Time,fill = Gender)) + 
+  geom_area(stat = "density") 
+
+
+lm.model.win <- lm(formula = Gun.Time ~ Chip.Time, data = df)
+lm.model.win
+
+View(df_temp2)
+
+
+ggplot(df,aes(x = X10K_time_to_halfway, y = halfway_to_end_time)) +
+  geom_point() + 
+  scale_color_gradient2(low = "white",high = "blue")
 
 
 
