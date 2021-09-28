@@ -1,0 +1,99 @@
+body {
+  font-family: "Arial Narrow" roboto condensed, helvetica, sans-serif;
+  font-size: 160%;
+}
+
+.tocify {
+  border-radius: 6px;
+  color: rgb(112, 111, 111);
+  
+  font-size: 80%;
+}
+
+.list-group-item.active {
+  background-color: gray;
+}
+
+.list-group-item.active:hover {
+  background-color: gray;
+}
+
+em {
+  font-style: normal;
+  font-weight: normal;
+}
+
+
+h1.title {
+  margin-right: 200px;
+  font-size: 300%;
+  font-family: "Arial Narrow";
+  font-style: normal;
+}
+
+h3.subtitle {
+  margin-right: 200px;
+  font-size: 250%;
+  font-family: "Arial Narrow";
+  font-style: normal;
+}
+
+h4.author {
+  font-size: 120%;
+  font-style: normal;
+}
+
+h4.date {
+  font-size: 120%;
+  font-style: italic;
+}
+h1 {
+  color: rgb(112, 111, 111);
+  font-size: 260%;
+  font-family: "Arial Narrow";
+  font-weight: bold;
+  font-style: normal;
+}
+
+h2 {
+  color: rgb(112, 111, 111);
+  font-size: 220%;
+  font-family: "Arial Narrow";
+  font-weight: bold;
+  font-style: normal;
+}
+
+h3 {
+  color: rgb(112, 111, 111);
+  font-size: 180%;
+  font-family: "Arial Narrow";
+  font-weight: bold;
+  font-style: normal;
+}
+
+h4 {
+  color: rgb(112, 111, 111);
+  font-size: 200%;
+  font-family: "Arial Narrow";
+  font-weight: bold;
+  font-style: normal;
+}
+
+h5 {
+  color: rgb(112, 111, 111);
+  font-size: 190%;
+  font-family: "Arial Narrow";
+  font-weight: bold;
+  font-style: normal;
+}
+
+.watermark {
+  opacity: 0.2;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  font-size: 500%;
+  color: #00407d;
+}
+
+

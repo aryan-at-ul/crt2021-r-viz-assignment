@@ -2,7 +2,14 @@
 title: "assignment_crt2021_dublin_marathon_viz"
 author: "aryan singh"
 date: "9/28/2021"
-output: html_document
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    css: template1.css
+    number_sections: yes
+    toc: yes
+    toc_float: yes
 ---
 
 # Introduction 
