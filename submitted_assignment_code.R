@@ -17,11 +17,13 @@ graphics.off()
 
 # getting dataframe 
 df <- read_csv("./data/marathon.csv")
-#df2 <- m
+
 #correct the col names to work with them properly
 names(df)<-make.names(names(df),unique = TRUE)
 head(df)
 
+
+#converting fu19 to f19 and ms to m25 just to have similar patter of age in category column 
 df <- df %>%  
   mutate(Category = case_when(Category == "FU19" ~ "F19",
                               Category == "FS" ~ "F25",
@@ -29,10 +31,11 @@ df <- df %>%
                               Category == "MU19" ~ "M19",
                               TRUE ~ Category))#
 
-
+#making a temp reference to work on
 df_temp <- df
 
 
+# afunction for typecasting a column
 convert_types <- function(x) {
   stopifnot(is.list(x))
   x[] <- rapply(x, utils::type.convert, classes = "character",
@@ -41,9 +44,15 @@ convert_types <- function(x) {
 }
 
 
+
+# some normal inspection 
 df %>%  distinct(Category)
+
+#converting char to factors
 df$Category = as.factor(df$Category)
 df$Gender = as.factor(df$Gender)
+
+#converting numerics to hms
 df$Chip.Time <- as.character(strptime(df$Chip.Time, "%H:%M:%S"), "%H:%M:%S")
 df %>% drop_na()
 df$Chip.Time =  as_hms(df$Chip.Time)
@@ -54,21 +63,14 @@ df$Gun.Time =  as_hms(df$Gun.Time)
 
 levels(df$Category)
 
+#not used
 filter <- df$Category %in% c("MS","FS","M35","F35","M40","M40","MU19","FU19")
 df2 <- df[filter,]
 
 
-ggplot(df , aes(x = Category, y = Chip.Time)) + 
-  geom_point() 
 
 
-ggplot(df , aes(x = Category, y =  Chip.Time, color = Gender)) + 
-  geom_point(size = 5, alpha = 1/5 , position = "jitter") +
-  xlab("age group") +
-  ylab("race completion time") + 
-  ggtitle("age group completion time spread") + 
-  theme_minimal()
-
+# one variable analysis , giving colors for gender
 
 ggplot(df, aes(x=Chip.Time ,color = Gender)) + 
   geom_histogram(aes(y=..density..),      # Histogram with density instead of count on y-axis
@@ -79,11 +81,14 @@ ggplot(df, aes(x=Chip.Time ,color = Gender)) +
 ggsave(filename = './figure/01_chiptime_density_histogram.png',plot = last_plot(),
        units = "cm", width = 29.7, height = 21, dpi = 600)
 
+
+# just another variation of denity plot
 ggplot(df, aes(x=Chip.Time, fill=Gender)) + geom_density(alpha=.3) + ggtitle("Density distibution of finish time , gender wise")
 ggsave(filename = './figure/01_chiptime_density_plot.png',plot = last_plot(),
        units = "cm", width = 29.7, height = 21, dpi = 600)
 
 
+#filtering out gender wise dataframe to work 
 df_m <- df[grep("M", df$Category),]#filter(df,Category == "Female")
 df_f <- df[grep("F", df$Category),]
 
