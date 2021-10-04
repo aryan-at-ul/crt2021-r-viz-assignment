@@ -30,7 +30,7 @@ m <- read_csv("marathon.csv")
 
 ***Rmarkdown may be useful to write your report. In Rstudio, do File>New File> R markdown to get started. You could look at the .Rmd files for my lectures on github also.***
 
-# SUBMISSION
+# SUBMISSION :
 
 ## code file : submitted_assignment_code.R
 ## submitted report : RMD/assignment_submitted_report.pdf 
