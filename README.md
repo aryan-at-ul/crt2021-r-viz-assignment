@@ -35,7 +35,7 @@ m <- read_csv("marathon.csv")
 ## code file : submitted_assignment_code.R
 ## submitted report : RMD/assignment_submitted_report.pdf 
 
-*submitted on*
+*submitted on :*
 > 28/09/2021
 
 
