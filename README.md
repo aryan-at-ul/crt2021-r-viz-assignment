@@ -5,7 +5,7 @@
 > Catherine Hurley
 
 *on* 
-> 8/27/2021
+> 07/09/2021
 
 **The dataset marathon.csv gives results from the 2018 Dublin city marathon scraped from https://www.tdleventservices.co.uk/event-results/events?event=3073. General marathon information is here http://kbcdublinmarathon.ie**
 
